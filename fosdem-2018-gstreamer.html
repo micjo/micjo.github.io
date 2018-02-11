@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-		<title>micjo's blog</title>
+		<title>micjo's blog &mdash; GStreamer Fosdem 2018</title>
 		<meta charset="utf-8" />
 		<link rel="profile" href="http://gmpg.org/xfn/11" />
 		<link rel="stylesheet" type="text/css" href="/theme/css/style.css" />
@@ -24,7 +24,7 @@
 		<div id="menu">
 			<div class="menu-navigation-container">
 				<ul id="menu-navigation" class="menu">
-						<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/category/fosdem.html">FOSDEM</a></li>
+						<li class="active" class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/category/fosdem.html">FOSDEM</a></li>
 						<li class="menu-item menu-item-type-post_type menu-item-object-page"><a href="/category/python-ruby.html">Python, Ruby</a></li>
 						<li  class="active" class="menu-item menu-item-type-post_type menu-item-object-page"><a href=""></a></li>
 						<li  class="active" class="menu-item menu-item-type-post_type menu-item-object-page"><a href=""></a></li>
@@ -37,6 +37,7 @@
 		</div>
 	
 		<div id="contents">
+
 <div class="post type-post status-publish format-standard hentry category-general" id="post">
 	<div class="entry-meta">
 		<div class="date"><a href="/fosdem-2018-gstreamer.html">Sun 11 February 2018</a></div>
@@ -165,133 +166,8 @@ These are a few plugin scripts you have to install seperately</p>
     		<span class="tag-links"><strong>Tagged</strong>
  <a href="/tag/fosdem.html" rel="tag">FOSDEM</a>,  <a href="/tag/gstreamer.html" rel="tag">gstreamer</a>,  <a href="/tag/opensource.html" rel="tag">OpenSource</a>    		</span>
 	</div> <!--/#main-->
-</div>  <!--/#post--><div class="post type-post status-publish format-standard hentry category-general" id="post">
-	<div class="entry-meta">
-		<div class="date"><a href="/fosdem-2018.html">Sun 11 February 2018</a></div>
-		<span class="byline">By <a href="/author/michiel-jordens.html">Michiel Jordens</a></span>
-			<span class="cat-links"><a href="/category/fosdem.html" title="View all posts in FOSDEM" rel="category tag">FOSDEM</a></span>
-	</div> <!-- /#entry-meta -->
-	<div class="main">
-		<h2 class="entry-title">
-			<a href="/fosdem-2018.html" title="Permalink to Fosdem 2018" rel="bookmark">Fosdem 2018</a>
-		</h2>
-		<div class="entry-content">
-			<h1>Fosdem 2018</h1>
-<p>Going to FOSDEM is always somewhat of a reality check.
-You see how much you stay in your silo at work, 
-how few women there are in our sector and 
-how small the campus has gotten over the last few years.
-Meeting old colleagues and learning 
-new things always bring me back however.</p>
-<p>There is never enough time to visit all the talks 
-you want to go to. FOSDEM is a week worth of 
-seminars condensed into 1 weekend.</p>
-<h2>Day 1</h2>
-<p>I attended a few talks today. The most interesting ones where:</p>
-<ul>
-<li><a href="https://fosdem.org/2018/schedule/event/linux_up_and_running/">How to keep your embedded linux device up and running</a></li>
-<li><a href="fosdem-2018-gstreamer.html">GStreamer talks</a></li>
-<li><a href="https://fosdem.org/2018/schedule/event/riscv/">Igniting the open hardware ecosystem with RISC-V</a></li>
-</ul>
-<p>While the actual application of the first talk remains to be seen,
-they did apply an interesting way of working. They used the concepts
-of 1 domain, the server world, and applied it in another, the embedded 
-domain. They did do  some tweaking as you dont have the same amount
-of resources on an embedded device.</p>
-<p>I devoted a seperate post to to the gstreamer topic as this was too much
-information to add here.</p>
-<p>RISC-V, the third talk in the list, is an open source hardware project.
-10 years ago this would be unthinkable. The presentation they did was running
-on a system with their chip on it. Very impressive. </p>
-<p><img src="img/risc-v.jpg" alt="risc-v" style="width: 800px;" /></p>
-<p>There were some other talks i went to. I will not go into detail
-about them however. I have added quite a few items to my need-to-read-about
-list. </p>
-<table>
-<thead>
-<tr>
-<th>Concept</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="https://git.tizen.org/cgit/tools/muxpi">muxpi</a></td>
-<td>a remote controllable device to do embedded testing</td>
-</tr>
-<tr>
-<td><a href="https://conan.io/">Conan</a></td>
-<td>a C/C++ package manager for developers</td>
-</tr>
-<tr>
-<td><a href="https://www.rtl-sdr.com/">RTL-SDR</a></td>
-<td>Cheap SDR for hobbyists</td>
-</tr>
-<tr>
-<td><a href="https://syslog-ng.org/">syslog-ng</a></td>
-<td>syslog on steroids</td>
-</tr>
-<tr>
-<td><a href="http://mqtt.org/">mqtt</a></td>
-<td>Lightweight messaging protocol</td>
-</tr>
-<tr>
-<td><a href="https://pagekite.net/">Pagekite</a></td>
-<td>Network Tunneling</td>
-</tr>
-<tr>
-<td><a href="https://en.wikipedia.org/wiki/Return-oriented_programming">ROP</a></td>
-<td>Return oriented programming</td>
-</tr>
-</tbody>
-</table>
-<p>The degeneration of the word embedded is rampant. More and more speakers 
-are (ab)using the term 'embedded' to lure in more attendants. </p>
-<h2>Day 2</h2>
-<p>During this day i was responsible for the video stream in the IoT devroom. 
-Sadly the second to last speaker was unable to make it, causing the last talk
-to be nearly empty. On the demo tables there was a group of people from 
-<a href="https://www.uba.be/">HAMRADIO</a> showcasing an interesting SDR waterfall:</p>
-<p><img src="img/hamradio.jpg" alt="HAMRadio" style="width: 800px;" /></p>
-<p>After cleaning the devroom there was still time to attend
-one last <a href="https://fosdem.org/2018/schedule/event/closing_keynote/">talk</a>. This
-room was packed. Meltdown and spectre are big news after all.</p>
-<p><img src="img/janson.jpg" alt="Janson" style="width: 800px;" /></p>
-		</div> <!--/#entry-content-->
-    		<span class="tag-links"><strong>Tagged</strong>
- <a href="/tag/fosdem.html" rel="tag">FOSDEM</a>,  <a href="/tag/opensource.html" rel="tag">OpenSource</a>    		</span>
-	</div> <!--/#main-->
-</div>  <!--/#post--><div class="post type-post status-publish format-standard hentry category-general" id="post">
-	<div class="entry-meta">
-		<div class="date"><a href="/blog-setup.html">Sat 10 February 2018</a></div>
-		<span class="byline">By <a href="/author/michiel-jordens.html">Michiel Jordens</a></span>
-			<span class="cat-links"><a href="/category/python-ruby.html" title="View all posts in Python, Ruby" rel="category tag">Python, Ruby</a></span>
-	</div> <!-- /#entry-meta -->
-	<div class="main">
-		<h2 class="entry-title">
-			<a href="/blog-setup.html" title="Permalink to Setting up a blog" rel="bookmark">Setting up a blog</a>
-		</h2>
-		<div class="entry-content">
-			<p>For personal development and portfolio showcasing, it makes sense 
-to start a blog. I had already heard of github-pages and when 
-pitching the idea to a friend he was quick to recommend jeckyll.</p>
-<p>I was handed 3 tutorials to follow and was a little overwhelmed at first. 
-There were quite a few difficulties trying to run jekyll. The combination 
-of permission problems, rbenv and various other packages I needed to install
-were quick to drive me away from jekyll. </p>
-<p>Pelican to the rescue. This is an alternative to jekyll. It is a
-python-based static webpage generator. I was amazed how quick it was
-to get things up and running. <a href="https://fedoramagazine.org/make-github-pages-blog-with-pelican/">This blog</a>
-was a great help.</p>
-<p>It is a bit odd to me that most, if not all, tutorials on github-pages mention
-jekyll as the go-to static webpage generator. For me, Pelican is a much better 
-fit, at least for now.</p>
-		</div> <!--/#entry-content-->
-    		<span class="tag-links"><strong>Tagged</strong>
- <a href="/tag/pelican.html" rel="tag">pelican</a>,  <a href="/tag/publishing.html" rel="tag">publishing</a>    		</span>
-	</div> <!--/#main-->
-</div>  <!--/#post--><div class="navigation">
-</div>
+</div>  <!--/#post-->
+
 		</div>
 		
 		<div id="footer">
