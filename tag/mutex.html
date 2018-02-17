@@ -43,7 +43,7 @@
 		<div id="contents">
 <div class="post type-post status-publish format-standard hentry category-general" id="post">
 	<div class="entry-meta">
-		<div class="date"><a href="/semaphore-vs-mutex.html">za 17 februari 2018</a></div>
+		<div class="date"><a href="/semaphore-vs-mutex.html">Sat 17 February 2018</a></div>
 		<span class="byline">By <a href="/author/michiel-jordens.html">Michiel Jordens</a></span>
 			<span class="cat-links"><a href="/category/multithreading.html" title="View all posts in Multithreading" rel="category tag">Multithreading</a></span>
 	</div> <!-- /#entry-meta -->
@@ -81,7 +81,7 @@ continue. This means that task b erroneously has a higher priority than
 task c.</p>
 <p><img src="img/priority_inversion.png" alt="priority_inversion" style="width: 600px;" /></p>
 <h2>Priority inheritance</h2>
-<p>To solve the problem of priority inversion, one needs priority inhertance.
+<p>To solve the problem of priority inversion, one needs priority inheritance.
 Priority inheritance will make sure that if there is resource contention
 between 2 tasks of different priority, the lower priority task will get
 promoted to higher priority task. In the example described above, this
@@ -90,11 +90,11 @@ task a would be allowed to finish before task b. Consequently, task c
 would be allowed to finished before task b.</p>
 <p><img src="img/priority_inheritance.png" alt="priority_inheritance" style="width: 600px;" /></p>
 <h2>Semaphore vs mutex (continued)</h2>
-<p>A semaphore allows sharing resources between multiple threads. For example:
+<p>A semaphore allows sharing resources between multiple threads and it is always positive. For example:
 a system has 5 serial interfaces which can be distributed between threads.
-The sempahore would be initialized with value 5 and if a thread requires
-acess it will 'wait' for it. If the semaphore is above 0, the wait will
-return immediately and decrement the sempahore. If the sempahore is 0,
+The semaphore would be initialized with value 5 and if a thread requires
+access it will 'wait' for it. If the semaphore is above 0, the wait will
+return immediately and decrement the semaphore. If the semaphore is equal to 0,
 the wait will block until another thread posts/releases/increments the
 semaphore.</p>
 <p>A mutex is used for ownership. While you have the mutex, meaning you have
@@ -102,7 +102,7 @@ locked it, you can manipulate the shared data. When you are done, you release
 the lock and another thread can lock the mutex and access the shared data.
 The actions performed while you have the lock, is also called the critical
 section. Note that there is a binary behavior: You have the lock or you
-don't. Whereas with a sempahore more than 1 thread can access the
+don't. Whereas with a semaphore more than 1 thread can access the
 resource at the same time, with a mutex this is impossible.</p>
 <p>Now the step to call a mutex a binary semaphore might seem logical.
 After all, it is just sharing a resource with binary behavior:</p>
@@ -124,7 +124,7 @@ option to perform priority inheritance.</p>
 <li>Priority inheritance is impossible with binary semaphores</li>
 <li>Priority inheritance is possible with mutex</li>
 </ul>
-<p><strong>Mutexes are not binary sempahores.</strong></p>
+<p><strong>Mutexes are not binary semaphores.</strong></p>
 <h2>Semaphores in C++11</h2>
 <p>Sadly, in the standard library, there is no semaphore available. While
 you can wrap the POSIX interface in a class, this is anything but elegant.
