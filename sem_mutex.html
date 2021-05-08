@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Blog</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <!-- Main Content-->
+<div class="mb-5 ms-5 me-5 mt-5">
+
+<h1 class> Semaphore and Mutex </h1>
+
+<p>
+This post will describe the differences between a semaphore and a
+mutex and some of the pitfalls you may encounter if you do not take
+these into consideration. Both semaphores and mutexes are concepts
+that come into play with threading and sharing resources between
+threads. Conceptually a mutex is for ownership and a semaphore is
+for synchronization.
+</p>
+
+<p>
+Many a coursebook consider a mutex to be a binary semaphore.
+however this is a gross oversimplification that will have detrimental
+effects on real-time/interrupt behavior. It is therefore false to assume
+a mutex is merely a binary semaphore.
+</p>
+
+<p>
+In order to explain the key difference between a mutex and a
+semaphore, one must understand the concept of priority inversion
+and priority inheritance.
+</p>
+
+<h2>Priority inversion</h2>
+<p>
+Given tasks a,b and c with respectively increasing priority in a
+real time operating system. Say task a, lowest priority, is running and
+obtains a lock l (i am deliberately not specifying if it's a mutex or
+semaphore) to manipulate data x . While it has the lock, it gets
+interrupted/preempted by task b. Task b on its turn gets interrupted
+by task c. Task c requires access to data x and needs to obtain lock l.
+However it is unable to do so as task A has not yet relinquished the
+resources. This is also referred to as resource contention.
+</p>
+
+<p>
+As task c is simply waiting for the lock, the scheduler will suspend task
+c and allow task b to finish running. Once b is finished, the scheduler
+will schedule task a. Only when the lock is released by task a, can task c
+continue. This means that task b erroneously has a higher priority than
+task c.
+</p>
+
+<img src="static/priority_inversion.png" alt="priority_inversion" style="width: 600px;" />
+
+<h2>Priority inheritance</h2>
+<p>
+To solve the problem of priority inversion, one needs priority inheritance.
+Priority inheritance will make sure that if there is resource contention
+between 2 tasks of different priority, the lower priority task will get
+promoted to higher priority task. In the example described above, this
+means that task a would get the same priority as task c. In other words,
+task a would be allowed to finish before task b. Consequently, task c
+would be allowed to finished before task b.
+</p>
+
+<img src="static/priority_inheritance.png" alt="priority_inheritance" style="width: 600px;" />
+
+<h2>Semaphore vs mutex (continued)</h2>
+<p>
+A semaphore allows sharing resources between multiple threads and it is always positive. For example:
+a system has 5 serial interfaces which can be distributed between threads.
+The semaphore would be initialized with value 5 and if a thread requires
+access it will 'wait' for it. If the semaphore is above 0, the wait will
+return immediately and decrement the semaphore. If the semaphore is equal to 0,
+the wait will block until another thread posts/releases/increments the
+semaphore.
+</p>
+
+<p>
+A mutex is used for ownership. While you have the mutex, meaning you have
+locked it, you can manipulate the shared data. When you are done, you release
+the lock and another thread can lock the mutex and access the shared data.
+The actions performed while you have the lock, is also called the critical
+section. Note that there is a binary behavior: You have the lock or you
+don't. Whereas with a semaphore more than 1 thread can access the
+resource at the same time, with a mutex this is impossible.
+</p>
+
+<p>
+Now the step to call a mutex a binary semaphore might seem logical.
+After all, it is just sharing a resource with binary behavior:
+</p>
+
+<ul>
+<li> Semaphore = 1: it can be locked</li>
+<li> Semaphore = 0: it is locked</li>
+</ul>
+
+<p>
+However this is where the big difference comes into play.
+<b>The task that has the lock, is transparent to the scheduler.</b>
+This is vital information to allow for priority inheritance. If you
+would not have this information, how do you know which task to elevate?
+If you would use a semaphore, this is exactly the information that is missing.
+With a semaphore any thread can wait or post to the semaphore. There is
+no context of which task was responsible. Consequently there is no
+option to perform priority inheritance. To recap:
+</p>
+
+<ul>
+<li>Priority inheritance is impossible with semaphores.</li>
+<li>Priority inheritance is impossible with binary semaphores</li>
+<li>Priority inheritance is possible with mutex</li>
+</ul>
+
+<b>Mutexes are not binary semaphores.</b>
+
+<h2> Semaphores in C++11</h2>
+<p>
+Sadly, in the standard library, there is no semaphore available. While
+you can wrap the POSIX interface in a class, this is anything but elegant.
+What the standard library does offer however, is a <a href="http://en.cppreference.com/w/cpp/thread/condition_variable">condition variable</a>
+This should provide the same functionality.
+</p>
+
+</p>
+Do note the subtle difference between wait_until and wait_for. wait_until
+uses an absolute time-point, measured since the epoch. wait_for uses a relative
+time interval. At first glance, this seems to be just a minor difference.
+However this has some important consequences. As you can always experience
+spurious wake ups, it is up to the caller to check if it was spurious or not.
+If it was spurious, the caller should call the wait function once more. If You
+use the wait_for function, every spurious wake up can delay your wait considerably.
+</p>
+
+<p>
+If you use wait_until, even if you call it again after a spurious wakeup, the
+end time is fixed. With wait_for this is undefined. If you use a predicate, this
+is not relevant, as spurious wake ups are avoided.
+</p>
+
+<p>
+For an example, have a look at my github repo <a href="https://github.com/micjo/snippets/blob/master/cpp/thread/thread_example.cpp">here</a>
+In this example I use the semaphore to immediately stop a detached thread on
+object destruction.
+</p>
+
+</div>
+
+  <!-- Footer -->
+  <div class="text-center mb-3 fixed-bottom">© 2020 Copyright: Michiel
+  </div>
+  <!-- Footer -->
+
+</footer>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Blog</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <!-- Main Content-->
+<div class="mb-5 ms-5 me-5 mt-5">
+
+<h1>Gstreamer</h1>
+<h2>Gstreamer for embedded devices</h2>
+<a href="https://archive.fosdem.org/2018/schedule/event/om_gst_embedded/">Fosdem talk</a>
+<p>
+GStreamer is widespread. It's used by TVs (LG, Samsung), settopboxes,
+In-flight-entertainment, the space station and the list goes on.
+</p>
+
+<h5>New features</h5>
+<ul>
+    <li>better zero-copy support (tee)</li>
+    <li>stabilized v4l2 names</li>
+    <li>hardware codecs</li>
+    <li>changing decoder resolutions at runtime</li>
+</ul>
+
+<h5> KMS improvements</h5>
+<i>KMS is the linux driver that puts the pixels on your screen</i>
+<ul>
+    <li>DMAbuf pool</li>
+    <li>video-overlay</li>
+    <li>more formats and devices</li>
+</ul>
+
+<h5> Embedded OpenGL</h5>
+<ul>
+    <li>Vivante EGL FB support (increases performance on imx6)</li>
+    <li>Moved into base and frozen API</li>
+    <li>Mesa DMAbuf export support</li>
+</ul>
+
+<h5> Process seperation</h5>
+<i>This allows putting a sink in a different process and use the source as a
+    slave</i>
+<ul>
+    <li>Master/Slave model</li>
+    <li>Useful for terrible APIs that only work with high privileges</li>
+</ul>
+
+<h5> Near future</h5>
+<ul>
+    <li>DRM modifiers</li>
+    <li>GStreamer CI on embedded systems</li>
+    <li>V4L2 stateless codecs</li>
+</ul>
+
+<h2>Gstreamer for tiny devices</h2>
+<a href="https://fosdem.org/2018/schedule/event/gstreamer_for_tiny_devices">Fosdem talk</a>
+<p>
+This was a talk trying to get gstreamer to compile and rune on a device with a
+very small footprint.  There were 3 things that he did :
+</p>
+
+<ul>
+<li>Link statically with libtool</li>
+<li>Butcher glib (even with compile options certain sections were still compiled in the library)</li>
+<li>Compress the binary with upx</li>
+</ul>
+
+<p>To link statically he had to use :</p>
+<ul>
+<li>GST_PLUGIN_STATIC_DECLARE</li>
+<li>GST_PLUGIN_STATIC_REGISTER</li>
+<li>GST_DEBUG=GST_PLUGIN_LOADING:4</li>
+</ul>
+<p>
+An interesting tool he used is called <a href="https://github.com/google/bloaty">bloaty</a>
+</p>
+
+<h2>Modern tools to debug GStreamer applications</h2>
+<a href="https://fosdem.org/2018/schedule/event/om_gst_dbg/">Fosdem talk</a>
+
+<h5>GstTracer</h5>
+<ul>
+<li>available from 1.8</li>
+<li>Traces modules loaded at runtime</li>
+<li>Post-run analysis and live introspection</li>
+<li>Monitoring hooks</li>
+<li>Formatted output</li>
+</ul>
+
+<h5>Stats Tracers</h5>
+<ul>
+<li>GST_TRACER=stats,usage</li>
+<li>GST_DEBUG=GST_TRACER</li>
+<li>gst-stats \*.log</li>
+</ul>
+
+<h5>Latency Tracers</h5>
+<p>
+This can measure the time it takes for each buffer
+to travel from source to sink.</p>
+<p class="text-monospace">
+GST_TRACERS=latency
+</p>
+
+<h5>Leaks Tracer</h5>
+<ul>
+<li>Tracks refcounts of GObjefct and GstMiniObject, Only track leaks in gst code.</li>
+<li>Raises warning on leaks.</li>
+<li>Integrated in 1.10.</li>
+<li>No false positives</li>
+<li>Lighter/faster than valgrind.</li>
+<li>Hook into CI / QA system</li>
+</ul>
+
+<h5>Tracing leaks</h5>
+<ul>
+<li>GST_TRACER=leaks</li>
+<li>GST_TRACER=stack-trace</li>
+<li>Track ref/unref operations (check-refs=true)</li>
+<li>List alive objects while running (SIGUSR1)</li>
+<li>Check points (SIGUSR2)</li>
+</ul>
+
+<p>
+You can use GST_TRACER=leaks to get a high level overview.
+If you see one object that has leaks, you can use the
+GST_TRACER=stack-trace to really zoom in on that object by
+visualizing the stack trace.
+</p>
+
+<h5>GSTShark</h5>
+<a href="https://github.com/RidgeRun/gst-shark">github</a>
+<ul>
+<li>Inter latency</li>
+<li>buffer rate on src pad</li>
+<li>schedule time</li>
+<li>Queues level</li>
+</ul>
+
+<p>
+GSTShark can show which element is underperforming.
+It supports creating graphs which are quite nice in showing
+where the bottlenecks are. This is not part of gstreamer.
+These are a few plugin scripts you have to install seperately
+</p>
+
+<h5>gst-log-parser</h5>
+<a href="https://github.com/gdesmott/gst-log-parser">github</a>
+<ul>
+<li>GStreamer logs parsing library</li>
+<li>High level objects to manipulate logs</li>
+<li>Easy filtering, mapping, etc (iterator)</li>
+<li>ts-diff : highlight highest timestamps gaps</li>
+</ul>
+
+</div>
+
+  <!-- Footer -->
+  <div class="text-center mb-3 fixed-bottom">© 2020 Copyright: Michiel
+  </div>
+  <!-- Footer -->
+
+</footer>
+</body>
+</html>

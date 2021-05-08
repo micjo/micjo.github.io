@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Blog</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Blog</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <!-- Main Content-->
+<div class="mb-5 ms-5 me-5 mt-5">
+
+<h1> Plugging std error code </h1>
+
+
+<p>
+Far too often, error handling is an item that gets pushed to the very end of a
+project. You only program to the so-called 'happy path' where everything works
+fine. This will, down the line, come back to haunt you. It is
+borderline impossible to properly add error handling to an existing codebase. 
+Error handling is not something you can slap on after the fact, it
+must be incorporated from the very beginning. There are several approaches
+available to you to do error handling.
+</p>
+
+<h2>Exceptions</h2>
+<p>
+While exceptions have a time and place (making a program crash in case of an error
+can be a good thing). More often than not, this does not always fit the bill.
+What if you simply want to notify the end user something went wrong and give the
+final call to them: Continue? This absolves your codebase from any assumptions
+based on which errors are critical and which ones aren't. The biggest advantage,
+in my view, of exceptions is that you do not impose any coupling in your design.
+If Layer A throws an exception and Layer B makes use of layer A, the B Layer need
+not know the intricate details of the error in Layer A. It simply gets thrown up
+to the top.
+</p>
+
+<h2>Error enums</h2>
+<p>
+Error enums have the advantage that they can notify your end user in a more
+graceful way. Rather than your program crashing and burning, You can simply
+pass the enum to the caller, either as a function return value or an lvalue
+reference argument. A disadvantage here is that you are more tightly coupling
+your layers. In the aforementioned example, when using error enums, Layer B
+will need to know more about the intricate details of the error in Layer A.
+In this case it would be including the error enum declaration. Any ways around
+this (like casting to integers) are not great practise and reduce readability.
+Another disadvantage is that the caller is always expected to get the error value.
+</p>
+
+<h2>std::error_code</h2>
+<p>
+std error codes can cater to these concerns. It can be passed in an agnostic way.
+That is to say, layers need not know about each other's details. It will not
+make your program crash and burn. The passing of the error_code itself between
+functions will still be required, of course. This can be mitigated by making it an
+optional argument. This is, by the way, how asio does it. If you do not pass an
+lvalue reference as the last argument, you are saying as much as: 'I ignore any
+incoming errors'. This is the only way to do it with free-standing functions.
+If you are using classes, you can make the error_code part of your class variables.
+In this case, I prefer to use 2 functions defined on that class :
+</p>
+<p class="text-monospace">
+std::error_code peekError() const; // returns the error
+std::error_code popError();        // returns the error and clears it
+<p>
+
+<p>
+These should speak for themselves (as it should be). popError should be the
+default in my view. This function is equivalent to getting the error and passing
+it along. Sort of like how exceptions get thrown up, this function will delegate the
+responsibility to the caller to handle the error.
+</p>
+
+<h2>An implementation</h2>
+<i>
+    The code associated with this example can be found <a href="https://github.com/micjo/snippets/blob/master/cpp/error_code">here</a></i>
+
+<p>
+This is a simple example of a strategy pattern to make a phone call.
+Let's go through the file phone.cpp:
+</p>
+
+<p>
+Internally, error_code still relies on an enum, so your first thought might be:
+This is still using an enum! what is the point? Well the difference here is that
+in the main.cpp you don't know the enum. It is contained within the compilation
+unit associated with phone.cpp.
+</p>
+
+<p>
+std::error_code has a constructor that relies on the make_error_code(e) function.
+What is important for this function is that the constructor is only available
+when std::is_error_code_enum&lt;e&gt; evaluates to true. 
+</p>
+
+<p>
+The next important part is that error_code is essentially a pair - a pair of 
+{int, error_category}. error_categoy is a base class for which you can overload
+the name and message functions. It is this message function that gets printed in the end.
+You only need one category instantiation so this is done immediately after the class
+definition and it is made const.
+</p>
+
+<p>
+The nice thing about the error handling as such is that you separate layer responsibilities.
+If we go back to our original example, Layer B has a number of options:
+</p>
+<ul>
+    <li> It can simply ignore the error in layer A </li>
+    <li> It can get the error in Layer A and pass it through </li>
+ <li> It can get the error in Layer A, and verify if everything is still okay, as errc can be
+     implicitly converted to a bool.</li>
+</ul>
+
+
+</div>
+
+  <!-- Footer -->
+  <div class="text-center mb-3 fixed-bottom">© 2020 Copyright: Michiel
+  </div>
+  <!-- Footer -->
+
+</footer>
+</body>
+</html>
