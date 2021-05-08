@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+        <div class="list-group">
+        {% for key,value in posts.items() %}
+        <a href="{{key}}.html"  class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1"> {{value["title"]}}</h5>
+                <small class="text-muted">{{value["date"]}}</small>
+            </div>
+            <p class="mb-1">{{value["description"]}}</p>
+            <small class="text-muted">
+                {% for tag in value["tags"] %}
+                <span class="badge bg-light text-dark">{{tag}}</span>
+                {% endfor %}
+            </small>
+          </a>
+        {% endfor %}
+        </div>
+{% endblock %}
